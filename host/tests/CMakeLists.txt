@@ -48,7 +48,11 @@ SET(test_sources
 )
 
 #turn each test cpp file into an executable with an int main() function
-ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DBOOST_TEST_MAIN)
+ADD_DEFINITIONS(-DBOOST_TEST_MAIN)
+
+IF(NOT BOOST_STATIC)
+	ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
+ENDIF()
 
 IF(ENABLE_C_API)
     LIST(APPEND test_sources
@@ -65,7 +69,9 @@ ENDIF(ENABLE_C_API)
 FOREACH(test_source ${test_sources})
     GET_FILENAME_COMPONENT(test_name ${test_source} NAME_WE)
     ADD_EXECUTABLE(${test_name} ${test_source})
-    TARGET_LINK_LIBRARIES(${test_name} uhd ${Boost_LIBRARIES})
+	IF(BOOST_STATIC)
+		ADD_DEPENDENCIES(${test_name} boost_libs)
+	ENDIF()
     UHD_ADD_TEST(${test_name} ${test_name})
     UHD_INSTALL(TARGETS ${test_name} RUNTIME DESTINATION ${PKG_LIB_DIR}/tests COMPONENT tests)
 ENDFOREACH(test_source)
