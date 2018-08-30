@@ -238,43 +238,39 @@ ENDIF(WIN32)
 ########################################################################
 # Setup Boost
 ########################################################################
-MESSAGE(STATUS "")
-MESSAGE(STATUS "Configuring Boost C++ Libraries...")
-SET(BOOST_REQUIRED_COMPONENTS
-    chrono
-    date_time
-    filesystem
-    program_options
-    regex
-    system
-    unit_test_framework
-    serialization
-)
-IF(MINGW)
-    LIST(APPEND BOOST_REQUIRED_COMPONENTS thread_win32)
-ELSE()
-    LIST(APPEND BOOST_REQUIRED_COMPONENTS thread)
-ENDIF()
 
-IF(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
-    LIST(APPEND BOOST_LIBRARYDIR "/usr/lib64") #fedora 64-bit fix
-ENDIF(UNIX AND NOT BOOST_ROOT AND EXISTS "/usr/lib64")
+message("STATIC boost")
+message("TEMPLATE_BOOST_ROOT: $ENV{TEMPLATE_BOOST_ROOT}")
+    # Boost libs to use, must be set before including boost.cmake.
+    SET(project_boost_libs
+        chrono
+        date_time
+        filesystem
+        program_options
+        regex
+        thread
+        system
+        serialization
+    )
+    INCLUDE(${CMAKE_SOURCE_DIR}/cmake/boost.cmake)
+    SET(Boost_LIBRARIES ${LIBBOOST_LIBS})
+    SET(Boost_FOUND 1)
+    SET(Boost_INCLUDE_DIRS $ENV{TEMPLATE_BOOST_ROOT})
+    SET(Boost_LIBRARY_DIRS ${LIBBOOST_DIRS})
 
-IF(MSVC)
-    SET(BOOST_ALL_DYN_LINK "${BOOST_ALL_DYN_LINK}" CACHE BOOL "boost enable dynamic linking")
-    IF(BOOST_ALL_DYN_LINK)
-        ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK) #setup boost auto-linking in msvc
-    ELSE(BOOST_ALL_DYN_LINK)
-        SET(BOOST_REQUIRED_COMPONENTS) #empty components list for static link
-    ENDIF(BOOST_ALL_DYN_LINK)
-ENDIF(MSVC)
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+    LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
-SET(Boost_ADDITIONAL_VERSIONS
-    "1.46.0" "1.46" "1.47.0" "1.47" "1.48.0" "1.48" "1.48.0" "1.49" "1.50.0" "1.50"
-    "1.51.0" "1.51" "1.52.0" "1.52" "1.53.0" "1.53" "1.54.0" "1.54" "1.55.0" "1.55"
-    "1.56.0" "1.56" "1.57" "1.57" "1.58" "1.59" "1.60" "1.61"
-)
-FIND_PACKAGE(Boost 1.53 COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
+    MESSAGE(STATUS "Boost include directories: ${Boost_INCLUDE_DIRS}")
+    MESSAGE(STATUS "Boost library directories: ${Boost_LIBRARY_DIRS}")
+    MESSAGE(STATUS "Boost libraries: ${Boost_LIBRARIES}")
+
+#SET(Boost_ADDITIONAL_VERSIONS
+#    "1.46.0" "1.46" "1.47.0" "1.47" "1.48.0" "1.48" "1.48.0" "1.49" "1.50.0" "1.50"
+#    "1.51.0" "1.51" "1.52.0" "1.52" "1.53.0" "1.53" "1.54.0" "1.54" "1.55.0" "1.55"
+#    "1.56.0" "1.56" "1.57" "1.57" "1.58" "1.59" "1.60" "1.61"
+#)
+#FIND_PACKAGE(Boost 1.53 COMPONENTS ${BOOST_REQUIRED_COMPONENTS})
 
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})

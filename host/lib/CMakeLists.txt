@@ -173,6 +173,7 @@ ENDIF(MSVC)
 # Setup libuhd library
 ########################################################################
 ADD_LIBRARY(uhd SHARED ${libuhd_sources})
+ADD_DEPENDENCIES(uhd boost_libs)
 TARGET_LINK_LIBRARIES(uhd ${Boost_LIBRARIES} ${libuhd_libs})
 SET_TARGET_PROPERTIES(uhd PROPERTIES DEFINE_SYMBOL "UHD_DLL_EXPORTS")
 IF(NOT LIBUHDDEV_PKG)
