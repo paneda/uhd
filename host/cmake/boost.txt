@@ -25,10 +25,10 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 # It is possible to override TEMPLATE_BOOST_ROOT by defining
 # LOCAL_BOOST_ROOT before including boost.txt
 if(NOT LOCAL_BOOST_ROOT)
-  set(LOCAL_BOOST_ROOT $ENV{BOOST_ROOT})
+  set(LOCAL_BOOST_ROOT $ENV{TEMPLATE_BOOST_ROOT})
 endif()
 
-message("TEMPLATE_BOOST_ROOT: $ENV{BOOST_ROOT}")
+message("TEMPLATE_BOOST_ROOT: $ENV{TEMPLATE_BOOST_ROOT}")
 #message("TEMPLATE_BOOST_LIBRARYDIR: $ENV{TEMPLATE_BOOST_LIBRARYDIR}")
 
 include(ExternalProject)

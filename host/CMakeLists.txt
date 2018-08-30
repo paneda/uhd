@@ -237,24 +237,26 @@ ENDIF(WIN32)
 option(BOOST_STATIC "Static linking of boost libraries" OFF)
 
 if (BOOST_STATIC)
+    message("STATIC boost")
 	# Boost libs to use, must be set before including boost.txt.
 	SET(project_boost_libs 
-    chrono
-    date_time
-    filesystem
-    program_options
-    regex
-    thread
-    system
-    serialization
+	    chrono
+	    date_time
+	    filesystem
+	    program_options
+	    regex
+	    thread
+	    system
+	    serialization
 	)
 	INCLUDE(${CMAKE_SOURCE_DIR}/cmake/boost.txt) 
 	SET(Boost_LIBRARIES ${LIBBOOST_LIBS})
 	SET(Boost_FOUND 1)
-	SET(Boost_INCLUDE_DIRS $ENV{BOOST_ROOT})
+	SET(Boost_INCLUDE_DIRS $ENV{TEMPLATE_BOOST_ROOT})
 	SET(Boost_LIBRARY_DIRS ${LIBBOOST_DIRS})
 
 	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+	#INCLUDE_DIRECTORIES("home/paneda/thirdpart/boost/boost_1_60_0")
 	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 	MESSAGE(STATUS "Boost include directories: ${Boost_INCLUDE_DIRS}")
